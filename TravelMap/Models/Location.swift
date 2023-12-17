@@ -8,7 +8,7 @@
 import Foundation
 import MapKit
 
-struct Location: Identifiable {
+struct Location: Identifiable, Equatable {
     
     var id: String {
         self.name + self.cityName
@@ -25,5 +25,9 @@ struct Location: Identifiable {
     let imageNames: [String]
     
     let link: String
+    
+    static func == (lhs: Location, rhs: Location) -> Bool {
+        return lhs.id == rhs.id
+    }
     
 }

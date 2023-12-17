@@ -23,6 +23,8 @@ class LocationViewModel: ObservableObject {
     
     let currentSpan = MKCoordinateSpan(latitudeDelta: 0.1, longitudeDelta: 0.1)
     
+    @Published var showLocationList: Bool = false
+    
     init() {
         let locations = LocationsDataService.locations
         self.locations = locations
@@ -31,12 +33,25 @@ class LocationViewModel: ObservableObject {
         self.updateCurrentRegion(location: locations.first!)
     }
     
-    func updateCurrentRegion(location: Location) {
+    private func updateCurrentRegion(location: Location) {
         withAnimation(.easeInOut) {
             self.currentRegion = MKCoordinateRegion(
                 center: location.coordinates,
                 span: self.currentSpan
             )
+        }
+    }
+    
+    func toggleShowLocationList() {
+        withAnimation(.easeInOut) {
+            showLocationList.toggle()
+        }
+    }
+    
+    func showNextLocation(location: Location) {
+        withAnimation(.easeInOut) {
+            self.currentLocation = location
+            showLocationList = false
         }
     }
     

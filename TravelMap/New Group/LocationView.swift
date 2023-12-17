@@ -31,20 +31,28 @@ extension LocationView {
     
     private var header: some View {
         VStack {
-            Text(locationViewModel.currentLocation.name + ", " + locationViewModel.currentLocation.cityName)
-                .font(.title2)
-                .fontWeight(.semibold)
-                .foregroundStyle(.primary)
-                .frame(height: 55)
-                .frame(maxWidth: .infinity)
-                .overlay(alignment: .leading) {
-                    Image(systemName: "arrow.down")
-                        .fontWeight(.semibold)
-                        .foregroundStyle(.primary)
-                        .padding()
-                }
+            Button(action: {
+                locationViewModel.toggleShowLocationList()
+            }, label: {
+                Text(locationViewModel.currentLocation.name + ", " + locationViewModel.currentLocation.cityName)
+                    .font(.title2)
+                    .fontWeight(.semibold)
+                    .foregroundStyle(.black)
+                    .frame(height: 55)
+                    .frame(maxWidth: .infinity)
+                    .animation(.none, value: locationViewModel.currentLocation)
+                    .overlay(alignment: .leading) {
+                        Image(systemName: "arrow.down")
+                            .fontWeight(.semibold)
+                            .foregroundStyle(.black)
+                            .padding()
+                            .rotationEffect(Angle(degrees: locationViewModel.showLocationList ? 180 : 0))
+                    }
+            })
             
-            LocationListView()
+            if locationViewModel.showLocationList {
+                LocationListView()
+            }
         }
         .background(.ultraThinMaterial)
         .cornerRadius(10)
