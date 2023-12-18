@@ -41,6 +41,7 @@ struct LocationDetailView: View {
             backButton
         }
         
+        
     }
 }
 
@@ -52,6 +53,7 @@ extension LocationDetailView {
                 Image(imageName)
                     .resizable()
                     .scaledToFit()
+                    // .frame(width: UIDevice.current.userInterfaceIdiom == .pad ? nil : UIScreen.main.bounds.width)
                     .frame(width: UIScreen.main.bounds.width)
                     .clipped()
             }
@@ -86,7 +88,13 @@ extension LocationDetailView {
     }
     
     private var mapLayer: some View {
-        Map(coordinateRegion: .constant(MKCoordinateRegion(center: location.coordinates, span: locationViewModel.currentSpan)),
+        Map(coordinateRegion: 
+                .constant(
+                    MKCoordinateRegion(
+                        center: location.coordinates,
+                        span:  MKCoordinateSpan(latitudeDelta: 0.01, longitudeDelta: 0.01)
+                    )
+                ),
             annotationItems: [location],
             annotationContent: { location in
                 MapAnnotation(coordinate: location.coordinates) {
@@ -106,12 +114,12 @@ extension LocationDetailView {
         }, label: {
             Image(systemName: "xmark")
                 .font(.headline)
-                .padding(16)
-                .foregroundStyle(.primary)
-                .background(.thickMaterial)
+                .padding(6)
+                .foregroundStyle(.black)
+                //.background(.thickMaterial)
                 .cornerRadius(10.0)
                 .shadow(radius: 10.0)
-                .padding()
+                .padding(12)
         })
     }
     

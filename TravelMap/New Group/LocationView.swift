@@ -12,6 +12,8 @@ struct LocationView: View {
     
     @EnvironmentObject private var locationViewModel: LocationViewModel
     
+    let iPadMaxWitch = CGFloat(500.0)
+    
     var body: some View {
         ZStack {
             //Map(coordinateRegion: $locationViewModel.currentRegion).ignoresSafeArea()
@@ -22,6 +24,7 @@ struct LocationView: View {
             VStack {
                 header
                     .padding()
+                    .frame(maxWidth: iPadMaxWitch)
                 
                 Spacer()
                 
@@ -91,6 +94,8 @@ extension LocationView {
                     LocationPreviewView(location: location)
                         .shadow(color: .black.opacity(0.3), radius: 20.0)
                         .padding()
+                        .frame(maxWidth: iPadMaxWitch)
+                        .frame(maxWidth: .infinity)
                         .transition(
                             .asymmetric(
                                 insertion: .move(edge: .trailing),
