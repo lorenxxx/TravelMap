@@ -14,7 +14,9 @@ struct LocationView: View {
     
     var body: some View {
         ZStack {
-            Map(coordinateRegion: $locationViewModel.currentRegion)
+            //Map(coordinateRegion: $locationViewModel.currentRegion).ignoresSafeArea()
+            
+            mapLayer
                 .ignoresSafeArea()
             
             VStack {
@@ -22,12 +24,35 @@ struct LocationView: View {
                     .padding()
                 
                 Spacer()
+                
+                locationPreviewStack
             }
+        }
+        .sheet(item: $locationViewModel.sheetLocation, onDismiss: nil) { location in
+             LocationDetailView(location: location)
         }
     }
 }
 
 extension LocationView {
+    
+    private var mapLayer: some View {
+        Map(
+            coordinateRegion: $locationViewModel.currentRegion,
+            annotationItems: locationViewModel.locations,
+            annotationContent: { location in
+                //MapMarker(coordinate: location.coordinates, tint: .blue)
+                MapAnnotation(coordinate: location.coordinates) {
+                    LocationMapAnnotationView()
+                        .scaleEffect(locationViewModel.currentLocation == location ? 1.0 : 0.7)
+                        .shadow(radius: 10)
+                        .onTapGesture {
+                            locationViewModel.showNextLocation(location: location)
+                        }
+                }
+            }
+        )
+    }
     
     private var header: some View {
         VStack {
@@ -59,6 +84,23 @@ extension LocationView {
         .shadow(color: .black.opacity(0.3), radius: 20, x: 0.0, y: 15.0)
     }
     
+    private var locationPreviewStack: some View {
+        ZStack {
+            ForEach(locationViewModel.locations) { location in
+                if locationViewModel.currentLocation == location {
+                    LocationPreviewView(location: location)
+                        .shadow(color: .black.opacity(0.3), radius: 20.0)
+                        .padding()
+                        .transition(
+                            .asymmetric(
+                                insertion: .move(edge: .trailing),
+                                removal: .move(edge: .leading)
+                            )
+                        )
+                }
+            }
+        }
+    }
 }
 
 #Preview {

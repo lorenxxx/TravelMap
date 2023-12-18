@@ -9,11 +9,13 @@ import SwiftUI
 
 struct LocationPreviewView: View {
     
+    @EnvironmentObject private var locationViewModel: LocationViewModel
+    
     let location: Location
     
     var body: some View {
-        HStack {
-            VStack(spacing: 16.0) {
+        HStack(alignment: .bottom, spacing: 0) {
+            VStack(alignment: .leading, spacing: 16.0) {
                 imageSection
                 titleSetcion
             }
@@ -23,6 +25,13 @@ struct LocationPreviewView: View {
                 nextButton
             }
         }
+        .padding(20.0)
+        .background(
+            RoundedRectangle(cornerRadius: 10.0)
+                .fill(.ultraThinMaterial)
+                .offset(y: 65.0)
+        )
+        .cornerRadius(10.0)
     }
     
 }
@@ -53,11 +62,12 @@ extension LocationPreviewView {
             Text(location.cityName)
                 .font(.subheadline)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
     private var learnMoreButton: some View {
         Button(action: {
-            
+            locationViewModel.sheetLocation = location
         }, label: {
             Text("Learn more")
                 .font(.headline)
@@ -68,7 +78,7 @@ extension LocationPreviewView {
     
     private var nextButton: some View {
         Button(action: {
-            
+            locationViewModel.nextButtonPressed()
         }, label: {
             Text("Next")
                 .font(.headline)
@@ -84,5 +94,7 @@ extension LocationPreviewView {
         Color.green.ignoresSafeArea()
         
         LocationPreviewView(location: LocationViewModel().locations.first!)
+            .padding()
     }
+    .environmentObject(LocationViewModel())
 }

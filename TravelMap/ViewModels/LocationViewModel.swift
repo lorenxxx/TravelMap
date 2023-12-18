@@ -25,6 +25,8 @@ class LocationViewModel: ObservableObject {
     
     @Published var showLocationList: Bool = false
     
+    @Published var sheetLocation: Location? = nil
+    
     init() {
         let locations = LocationsDataService.locations
         self.locations = locations
@@ -53,6 +55,22 @@ class LocationViewModel: ObservableObject {
             self.currentLocation = location
             showLocationList = false
         }
+    }
+    
+    func nextButtonPressed() {
+        guard let currentLocationIndex = locations.firstIndex(where: {$0 == self.currentLocation}) else {
+            print("current location index not found")
+            return
+        }
+        
+        var nextLocationIndex = currentLocationIndex + 1
+        if nextLocationIndex == locations.count {
+            nextLocationIndex = 0
+        }
+        
+        let nextLocation = locations[nextLocationIndex]
+        
+        showNextLocation(location: nextLocation)
     }
     
 }
